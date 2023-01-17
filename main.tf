@@ -239,8 +239,8 @@ resource "aws_rds_cluster" "secondary" {
 }
 
 resource "aws_rds_cluster_instance" "default" {
-  for_each                              = { for instance in var.instance_type : instance.instance_type => instance }
-  identifier                            = var.cluster_identifier == "" ? "${module.this.id}-${each.value.index}" : "${var.cluster_identifier}-${each.value.index}"
+  for_each                              = { for instance in var.instance_type : instance.index => instance }
+  identifier                            = var.cluster_identifier == "" ? "${module.this.id}-${each.value.index + 1}" : "${var.cluster_identifier}-${each.value.index + 1}"
   cluster_identifier                    = coalesce(join("", aws_rds_cluster.primary.*.id), join("", aws_rds_cluster.secondary.*.id))
   instance_class                        = var.serverlessv2_scaling_configuration != null ? "db.serverless" : each.value.instance_type
   db_subnet_group_name                  = join("", aws_db_subnet_group.default.*.name)
