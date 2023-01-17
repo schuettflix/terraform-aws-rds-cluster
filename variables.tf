@@ -25,9 +25,12 @@ variable "subnets" {
 }
 
 variable "instance_type" {
-  type        = string
-  default     = "db.t2.small"
-  description = "Instance type to use"
+  type = list(object({
+    index         = number
+    instance_type = string
+  }))
+  default     = []
+  description = "A list of objects that set the instance type for each instance in the Aurora cluster. Starting with index 1 which is the 1st instance."
 }
 
 variable "cluster_identifier" {
